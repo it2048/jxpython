@@ -1,4 +1,4 @@
-__author__ = 'xfl'
+﻿__author__ = 'xfl'
 #-*- coding:utf-8 -*-
 from CCommon import CCommon
 from CConfig import CConfig
