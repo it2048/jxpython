@@ -1,15 +1,14 @@
 __author__ = 'xfl'
 #-*- coding:utf-8 -*-
 from CCommon import CCommon
+from CConfig import CConfig
 import bs4
 import time
 import re
 import datetime
 import sys
-import string
 import MySQLdb
 
-path = "E:/test/"
 #置顶文章蜘蛛
 def main():
     sql = "INSERT INTO `jx_news` (`addtime` ,`adduser` ,`title`,`content`,`img_url`," \
@@ -46,7 +45,7 @@ def main():
                 tp.decompose()
             desc = unicode(desc)
             #将封面文件存储
-            imgname = common.downloadImageFile(url+finda.find('img').get('src'),path)
+            imgname = common.downloadImageFile(url+finda.find('img').get('src'),CConfig.path())
             sql += '''(%d,"robots","%s","%s","%s",0,"%s",1),''' %(
                 intdate,finda.get('title'),MySQLdb.escape_string(desc),'/public/upload/'+imgname,source)
     return common.exeSql(sql[:-1])

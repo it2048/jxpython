@@ -3,20 +3,17 @@ __author__ = 'xfl'
 import requests
 import MySQLdb
 import time
-import re
+from CConfig import CConfig
 
 class CCommon:
     def getHtml(self,url):
         response = requests.get(url)
         return response.content
 
-    def getConnect(self):
-        return MySQLdb.connect(host='12345.mysql.rds.aliyuncs.com', user='67894',passwd='1234',db='123',port=6,charset='utf8')
-
     def exeSql(self,sql):
         try:
             tim = time.strftime('%Y%m%d',time.localtime(time.time()))
-            conn = self.getConnect()
+            conn = CConfig.getConnect()
             cur = conn.cursor()
             cur.execute('SET NAMES utf8')
             cur.execute(sql)
@@ -29,7 +26,7 @@ class CCommon:
     def querySql(self,sql):
         try:
             tim = time.strftime('%Y%m%d',time.localtime(time.time()))
-            conn = self.getConnect()
+            conn = CConfig.getConnect()
             cur = conn.cursor()
             cur.execute('SET NAMES utf8')
             cur.execute(sql)
