@@ -3,6 +3,7 @@ __author__ = 'xfl'
 import requests
 import MySQLdb
 import time
+from PIL import Image as image
 from CConfig import CConfig
 
 class CCommon:
@@ -46,4 +47,6 @@ class CCommon:
                     f.write(chunk)
                     f.flush()
             f.close()
+        img = image.open(path+local_filename)
+        img.resize((190, 120),image.ANTIALIAS).save(path+'slt/'+local_filename,"JPEG")
         return local_filename
