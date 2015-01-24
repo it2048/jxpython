@@ -48,14 +48,6 @@ class CCmain:
         sql = "INSERT INTO `jx_news` (`addtime` ,`adduser` ,`title`,`content`,`img_url`," \
                       "`type` ,`source`,`status`)VALUES"
         UrlList = [
-            ['http://www.kbcmw.com/?list-1536.html',u'【党政要闻】',0],
-            ['http://www.kbcmw.com/?list-1543.html',u'【舆论监督哨】',0],
-            ['http://www.kbcmw.com/?list-1537.html',u'【聚焦甘孜】',0],
-            ['http://www.kbcmw.com/?list-1538.html',u'【各县动态】',0],
-            ['http://www.kbcmw.com/?list-1539.html',u'【康巴时评】',0],
-            ['http://www.kbcmw.com/?list-1543.html',u'【舆论监督哨】',0],
-            ['http://www.kbcmw.com/?list-1545.html',u'【政策资讯】',1],
-            ['http://www.kbcmw.com/?list-1546.html',u'【交通资讯】',1],
             ['http://www.kbcmw.com/?list-1547.html',u'【旅游资讯】',1],
             ['http://www.kbcmw.com/?list-1559.html',u'【康巴美景】',3],
             ['http://www.kbcmw.com/?list-1560.html',u'【旅游攻略】',3],
@@ -97,7 +89,11 @@ class CCmain:
                     tm = content.find(attrs={"class" : "show_info"}).text
                     tn = tm.find("\r")
                     tm = tm[3:tn].strip()
-                    intdate = int(time.mktime(time.strptime(tm[:11],u"%Y年%m月%d日")))
+                    try:
+                        intdate = int(time.mktime(time.strptime(tm[:11],u"%Y年%m月%d日")))
+                    except:
+                        print tm[:11]
+                        intdate = int(time.time())
                     source = tm[tm.find("：")+1:]
                     desc = content.find(attrs={"style" : "text-align:justify"})
                     imgname = ''
