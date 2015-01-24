@@ -92,7 +92,7 @@ class CCmain:
                         arti = common.getHtml(hrf)
                     except:
                         continue
-                    souparti = bs4.BeautifulSoup(arti,fromEncoding='utf8')
+                    souparti = bs4.BeautifulSoup(arti,from_encoding='utf8')
                     content = souparti.find(attrs={"class" : "list_left_content"})
                     tm = content.find(attrs={"class" : "show_info"}).text
                     tn = tm.find("\r")
