@@ -1,4 +1,3 @@
-__author__ = 'xfl'
 #-*- coding:utf-8 -*-
 import requests
 import MySQLdb
