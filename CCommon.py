@@ -3,7 +3,9 @@ __author__ = 'xfl'
 import requests
 import MySQLdb
 import time
+from PIL import Image as image
 from CConfig import CConfig
+import os
 
 class CCommon:
     def getHtml(self,url):
@@ -47,4 +49,9 @@ class CCommon:
                     f.write(chunk)
                     f.flush()
             f.close()
+        img = image.open(path+local_filename)
+        img.resize((190, 120),image.ANTIALIAS).save(path+'slt/slt'+local_filename,"JPEG")
+        if os.path.exists(path+'slt/slt'+local_filename):
+            os.rename(path+local_filename,path+"slt"+local_filename)
+            local_filename = "slt"+local_filename;
         return local_filename
