@@ -11,7 +11,7 @@ class CCmain:
                       "`type` ,`source`,`status`)VALUES"
         url = 'http://www.kbcmw.com'
 
-        sqlSel = "SELECT title FROM jx_news WHERE type=0 and status=1"
+        sqlSel = "SELECT title FROM jx_news WHERE type=0"
         common = CCommon()
         html = common.getHtml(url)
         rows = common.querySql(sqlSel)
@@ -69,14 +69,14 @@ class CCmain:
             ['http://www.kbcmw.com/?list-1558.html',u'【纪实康巴】',4]
         ]
         urll = 'http://www.kbcmw.com'
-        sqlSel = "SELECT title FROM jx_news WHERE type=0 and status=0"
+        sqlSel = "SELECT title FROM jx_news"
+        newLst = []
         common = CCommon()
+        rows = common.querySql(sqlSel)
+        for row in rows:
+           newLst.append(row[0])
         for url in UrlList:
             html = common.getHtml(url[0])
-            newLst = []
-            rows = common.querySql(sqlSel)
-            for row in rows:
-               newLst.append(row[0])
             soup = bs4.BeautifulSoup(html,from_encoding='utf8')
             table = soup.find(attrs={"class" : "list_left_content"})
             i = 0;
