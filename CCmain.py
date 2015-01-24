@@ -117,8 +117,9 @@ class CCmain:
                             tp.decompose()
                     desc = unicode(desc)
                     desc = desc.replace("/UploadFiles/", urll+"/UploadFiles/");
+                    status = 0
                     if imgname!='':
-                        status = 1;
+                        status = 1
                     sql += '''(%d,"robots","%s","%s","%s",%d,"%s",%d),''' %(
                         intdate,txt,MySQLdb.escape_string(desc),'/public/upload/'+imgname,url[2],source,status)
         if i==0:
