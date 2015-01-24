@@ -100,8 +100,7 @@ class CCmain:
                     try:
                         intdate = int(time.mktime(time.strptime(tm[:11],u"%Y年%m月%d日")))
                     except:
-                        print tm[:11]
-                        intdate = int(time.time())
+                        continue
                     source = tm[tm.find("：")+1:]
                     desc = content.find(attrs={"style" : "text-align:justify"})
                     imgname = ''
@@ -118,8 +117,10 @@ class CCmain:
                             tp.decompose()
                     desc = unicode(desc)
                     desc = desc.replace("/UploadFiles/", urll+"/UploadFiles/");
-                    sql += '''(%d,"robots","%s","%s","%s",%d,"%s",0),''' %(
-                        intdate,txt,MySQLdb.escape_string(desc),'/public/upload/'+imgname,url[2],source)
+                    if imgname!='':
+                        status = 1;
+                    sql += '''(%d,"robots","%s","%s","%s",%d,"%s",%d),''' %(
+                        intdate,txt,MySQLdb.escape_string(desc),'/public/upload/'+imgname,url[2],source,status)
         if i==0:
             return True
         else:
