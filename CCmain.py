@@ -36,7 +36,7 @@ class CCmain:
                 if hasattr(desc,"contents")==False:
                     desc = content.find(attrs={"id" : "MyContent"})
                     tp = desc.find(attrs={"style" : "text-align:center"})
-                    if hasattr(tp,"contents")==False:
+                    if hasattr(tp,"contents")!=False:
                         tp.decompose()
                 desc = unicode(desc)
                 imgname = common.downloadImageFile(url+finda.find('img').get('src'),CConfig.path())
@@ -105,7 +105,10 @@ class CCmain:
                         desc = content.find(attrs={"id" : "MyContent"})
                         tp = desc.find(attrs={"style" : "text-align:center"})
                         if hasattr(tp,"contents")!=False:
-                            urlll = urll+tp.find('img').get('src')
+                            try:
+                                urlll = urll+tp.find('img').get('src')
+                            except:
+                                urlll=''
                             if urlll!='':
                                 imgname = common.downloadImageFile(urlll,CConfig.path())
                             tp.decompose()
