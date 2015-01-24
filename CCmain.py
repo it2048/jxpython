@@ -7,7 +7,6 @@ import time
 import MySQLdb
 
 class CCmain:
-    #置顶文章蜘蛛
     def main(self):
         sql = "INSERT INTO `jx_news` (`addtime` ,`adduser` ,`title`,`content`,`img_url`," \
                       "`type` ,`source`,`status`)VALUES"
@@ -41,14 +40,11 @@ class CCmain:
                     if hasattr(tp,"contents")==False:
                         tp.decompose()
                 desc = unicode(desc)
-                #将封面文件存储
                 imgname = common.downloadImageFile(url+finda.find('img').get('src'),CConfig.path())
                 sql += '''(%d,"robots","%s","%s","%s",0,"%s",1),''' %(
                     intdate,finda.get('title'),MySQLdb.escape_string(desc),'/public/upload/'+imgname,source)
         return common.exeSql(sql[:-1])
 
-
-    #普通文章蜘蛛
     def main1(self):
         sql = "INSERT INTO `jx_news` (`addtime` ,`adduser` ,`title`,`content`,`img_url`," \
                       "`type` ,`source`,`status`)VALUES"
@@ -116,7 +112,6 @@ class CCmain:
                             tp.decompose()
                     desc = unicode(desc)
                     desc = desc.replace("/UploadFiles/", urll+"/UploadFiles/");
-                    #将封面文件存储
                     sql += '''(%d,"robots","%s","%s","%s",%d,"%s",0),''' %(
                         intdate,txt,MySQLdb.escape_string(desc),'/public/upload/'+imgname,url[2],source)
         if i==0:
