@@ -18,14 +18,14 @@ class CCmain:
         newLst = []
         for row in rows:
             newLst.append(row[0])
-        soup = bs4.BeautifulSoup(html,from_encoding='utf8')
+        soup = bs4.BeautifulSoup(html,from_encoding='gb2312')
         table = soup.find(attrs={"class" : "pic"})
         for finda in table.findAll('a'):
             if not (finda.get('title') in newLst):
                 print "link good!\n"
                 hrf = url+finda.get('href')
                 arti = common.getHtml(hrf)
-                souparti = bs4.BeautifulSoup(arti,from_encoding='utf8')
+                souparti = bs4.BeautifulSoup(arti,from_encoding='gb2312')
                 content = souparti.find(attrs={"class" : "list_left_content"})
                 tm = content.find(attrs={"class" : "show_info"}).text
                 tn = tm.find("\r")
@@ -81,7 +81,7 @@ class CCmain:
            newLst.append(row[0])
         for url in UrlList:
             html = common.getHtml(url[0])
-            soup = bs4.BeautifulSoup(html,from_encoding='utf8')
+            soup = bs4.BeautifulSoup(html,from_encoding='gb2312')
             table = soup.find(attrs={"class" : "list_left_content"})
             i = 0;
             for finda in table.findAll('ul'):
@@ -96,7 +96,7 @@ class CCmain:
                         arti = common.getHtml(hrf)
                     except:
                         continue
-                    souparti = bs4.BeautifulSoup(arti,from_encoding='utf8')
+                    souparti = bs4.BeautifulSoup(arti,from_encoding='gb2312')
                     content = souparti.find(attrs={"class" : "list_left_content"})
                     tm = content.find(attrs={"class" : "show_info"}).text
                     tn = tm.find("\r")
