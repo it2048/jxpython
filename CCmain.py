@@ -36,7 +36,11 @@ class CCmain:
                 if hasattr(desc,"contents")==False:
                     desc = content.find(attrs={"id" : "MyContent"})
                     tp = desc.find(attrs={"style" : "text-align:center"})
-                    if hasattr(tp,"contents")!=False:
+                    if hasattr(tp,"contents")==False:
+                        tp = desc.find(attrs={"style" : "text-align: center;"})
+                        if hasattr(tp,"contents")!=False:
+                            tp.decompose()
+                    else:
                         tp.decompose()
                 desc = unicode(desc)
                 imgname = common.downloadImageFile(url+finda.find('img').get('src'),CConfig.path())
@@ -115,13 +119,21 @@ class CCmain:
                             if urlll!='':
                                 imgname = common.downloadImageFile(urlll,CConfig.path())
                             tp.decompose()
+                        else:
+                            tp = desc.find(attrs={"style" : "text-align: center;"})
+                            if hasattr(tp,"contents")!=False:
+                                tp.decompose()
                     desc = unicode(desc)
                     desc = desc.replace("/UploadFiles/", urll+"/UploadFiles/");
                     status = 0
                     if imgname!='':
                         status = 1
+                        imgname = '/public/upload/'+ imgname
+                    if "/public/upload/"==imgname:
+                        imgname = ''
+                        status = 0
                     sql += '''(%d,"robots","%s","%s","%s",%d,"%s",%d),''' %(
-                        intdate,txt,MySQLdb.escape_string(desc),'/public/upload/'+imgname,url[2],source,status)
+                        intdate,txt,MySQLdb.escape_string(desc),imgname,url[2],source,status)
         if i==0:
             return True
         else:
