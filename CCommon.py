@@ -18,10 +18,10 @@ class CCommon:
             cur = conn.cursor()
             cur.execute('SET NAMES utf8')
             cur.execute(sql)
-            rows =conn.commit()
+            conn.commit()
             cur.close()
             conn.close()
-            return rows
+            return cur.lastrowid
         except MySQLdb.Error,e:
             print "%s :Mysql Error %d: %s \n" % (tim,e.args[0], e.args[1])
 

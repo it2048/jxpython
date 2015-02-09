@@ -138,3 +138,84 @@ class CCmain:
             return True
         else:
             return common.exeSql(sql[:-1])
+
+    def dtore(self,intdate,txt,source,imgll1,imgll2):
+        sql = "INSERT INTO `jx_news` (`addtime` ,`adduser` ,`title`,`content`,`img_url`," \
+              "`type` ,`source`,`status`)VALUES"
+        url = 'http://www.kbcmw.com'
+        common = CCommon()
+        i=0
+        idp = 0;
+        newLst = []
+        for test in imgll1:
+            if i==0:
+                imgname = common.downloadImageFile(url+test,CConfig.path())
+                if imgname!='':
+                    imgname = '/public/upload/'+ imgname
+                else:
+                    break
+                if "/public/upload/"==imgname:
+                    break
+                sql1 =sql + '''(%d,"robots","%s","%s","%s",%d,"%s",%d),''' %(
+                        intdate,txt,MySQLdb.escape_string(imgll2[0]),imgname,2,source,0)
+                idp = common.exeSql(sql1[:-1])
+            else:
+                imgname = common.downloadImageFile(url+test,CConfig.path())
+                if imgname!='':
+                    imgname = '/public/upload/'+ imgname
+                else:
+                    break
+                if "/public/upload/"==imgname:
+                    break
+                sql2 =sql + '''(%d,"robots","%s","%s","%s",%d,"%s",%d),''' %(
+                        intdate,txt,MySQLdb.escape_string(imgll2[i]),imgname,2,source,0)
+                newLst.append(str(common.exeSql(sql2[:-1])))
+            i = i+1
+        if idp<>0:
+            lst = ",".join(newLst)
+            upade = '''UPDATE `jx_news` SET `child_list` = "%s" WHERE `id` = %d''' %(lst,idp)
+            ui = common.exeSql(upade)
+            print txt+"nice!"
+
+    def main2(self):
+        UrlList = [
+            ['http://www.kbcmw.com/?list-1497.html',u'【康巴风光】',0],
+            ['http://www.kbcmw.com/?list-1530.html',u'【图片新闻】',0],
+            ['http://www.kbcmw.com/?list-1527.html',u'【记忆康巴】',0],
+            ['http://www.kbcmw.com/?list-1529.html',u'【摄影世界】',0]
+        ]
+        sqlSel = "SELECT title FROM jx_news WHERE type=2 and child_list is not null and child_list!=''"
+        common = CCommon()
+        rows = common.querySql(sqlSel)
+        newLst = []
+        for row in rows:
+            newLst.append(row[0])
+        for urll in UrlList:
+            html = common.getHtml(urll[0])
+            soup = bs4.BeautifulSoup(html,from_encoding='gb2312')
+            table = soup.find(attrs={"class" : "listpicmain_content"})
+            for finda in table.findAll(attrs={"class" : "listpicsimple"}):
+                tmpa = finda.find(attrs={"class" : "listpicsimpletitle"}).find('a')
+                if not (tmpa.text in newLst):
+                    print "link good!\n"
+                    hrf = tmpa.get('href')
+                    arti = common.getHtml(hrf)
+                    souparti = bs4.BeautifulSoup(arti,from_encoding='gb2312')
+                    content = souparti.find(attrs={"class" : "show_title"}).text
+                    tn = content.find("时间：")
+                    tm = content[tn+3:tn+21].strip()
+                    intdate = int(time.mktime(time.strptime(tm,u"%Y-%m-%d %H:%M:%S")))
+                    src = content.find("作者：")
+                    source = content[src+3:].strip()
+                    imgList = souparti.find(attrs={"class" : "picnrbox"}).find('script').text
+                    if imgList=="":
+                        continue
+                    st1 = imgList.find("imgArr=")+8
+                    st2 = imgList.find("split")-3
+                    imgll1 = imgList[st1:st2].split("|")
+                    tmp2 = imgList[st2+30:]
+                    st3 = tmp2.find("Arr=")+5
+                    st4 = tmp2.find("split")-3
+                    imgll2 = tmp2[st3:st4].split("|")
+                    self.dtore(intdate,urll[1]+tmpa.text,source,imgll1,imgll2)
+        return 1
