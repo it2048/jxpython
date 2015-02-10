@@ -45,7 +45,7 @@ class CCmain:
                 desc = unicode(desc)
                 imgname = common.downloadImageFile(url+finda.find('img').get('src'),CConfig.path())
                 sql += '''(%d,"robots","%s","%s","%s",0,"%s",1),''' %(
-                    intdate,finda.get('title'),MySQLdb.escape_string(desc),'/public/upload/'+imgname,source)
+                    intdate,MySQLdb.escape_string(finda.get('title')),MySQLdb.escape_string(desc),'/public/upload/'+imgname,source)
         return common.exeSql(sql[:-1])
 
     def main1(self):
@@ -133,7 +133,7 @@ class CCmain:
                         imgname = ''
                         status = 0
                     sql += '''(%d,"robots","%s","%s","%s",%d,"%s",%d),''' %(
-                        intdate,txt,MySQLdb.escape_string(desc),imgname,url[2],source,status)
+                        intdate,MySQLdb.escape_string(txt),MySQLdb.escape_string(desc),imgname,url[2],source,status)
         if i==0:
             return True
         else:
@@ -204,7 +204,10 @@ class CCmain:
                     content = souparti.find(attrs={"class" : "show_title"}).text
                     tn = content.find("时间：")
                     tm = content[tn+3:tn+21].strip()
-                    intdate = int(time.mktime(time.strptime(tm,u"%Y-%m-%d %H:%M:%S")))
+                    try:
+                        intdate = int(time.mktime(time.strptime(tm,u"%Y-%m-%d %H:%M:%S")))
+                    except:
+                        continue
                     src = content.find("作者：")
                     source = content[src+3:].strip()
                     imgList = souparti.find(attrs={"class" : "picnrbox"}).find('script').text
@@ -217,5 +220,5 @@ class CCmain:
                     st3 = tmp2.find("Arr=")+5
                     st4 = tmp2.find("split")-3
                     imgll2 = tmp2[st3:st4].split("|")
-                    self.dtore(intdate,urll[1]+tmpa.text,source,imgll1,imgll2)
+                    self.dtore(intdate,MySQLdb.escape_string(urll[1]+tmpa.text),source,imgll1,imgll2)
         return 1
