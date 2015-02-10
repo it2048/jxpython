@@ -21,7 +21,8 @@ class CCmain:
         soup = bs4.BeautifulSoup(html,from_encoding='gb2312')
         table = soup.find(attrs={"class" : "pic"})
         for finda in table.findAll('a'):
-            if not (finda.get('title') in newLst):
+            title = MySQLdb.escape_string(finda.get('title'))
+            if not (title in newLst):
                 print "link good!\n"
                 hrf = url+finda.get('href')
                 arti = common.getHtml(hrf)
@@ -45,7 +46,7 @@ class CCmain:
                 desc = unicode(desc)
                 imgname = common.downloadImageFile(url+finda.find('img').get('src'),CConfig.path())
                 sql += '''(%d,"robots","%s","%s","%s",0,"%s",1),''' %(
-                    intdate,MySQLdb.escape_string(finda.get('title')),MySQLdb.escape_string(desc),'/public/upload/'+imgname,source)
+                    intdate,title,MySQLdb.escape_string(desc),'/public/upload/'+imgname,source)
         return common.exeSql(sql[:-1])
 
     def main1(self):
@@ -89,6 +90,7 @@ class CCmain:
                 if i>10:break
                 tmpa = finda.find('a')
                 txt = url[1]+tmpa.text[2:]
+                txt = MySQLdb.escape_string(txt)
                 if not (txt in newLst):
                     print "{0} {1} link good!\n".format(i,url[1])
                     hrf = tmpa.get('href')
@@ -133,7 +135,7 @@ class CCmain:
                         imgname = ''
                         status = 0
                     sql += '''(%d,"robots","%s","%s","%s",%d,"%s",%d),''' %(
-                        intdate,MySQLdb.escape_string(txt),MySQLdb.escape_string(desc),imgname,url[2],source,status)
+                        intdate,txt,MySQLdb.escape_string(desc),imgname,url[2],source,status)
         if i==0:
             return True
         else:
@@ -196,7 +198,8 @@ class CCmain:
             table = soup.find(attrs={"class" : "listpicmain_content"})
             for finda in table.findAll(attrs={"class" : "listpicsimple"}):
                 tmpa = finda.find(attrs={"class" : "listpicsimpletitle"}).find('a')
-                if not (tmpa.text in newLst):
+                title = MySQLdb.escape_string(urll[1]+tmpa.text)
+                if not (title in newLst):
                     print "link good!\n"
                     hrf = tmpa.get('href')
                     arti = common.getHtml(hrf)
@@ -220,5 +223,5 @@ class CCmain:
                     st3 = tmp2.find("Arr=")+5
                     st4 = tmp2.find("split")-3
                     imgll2 = tmp2[st3:st4].split("|")
-                    self.dtore(intdate,MySQLdb.escape_string(urll[1]+tmpa.text),source,imgll1,imgll2)
+                    self.dtore(intdate,title,source,imgll1,imgll2)
         return 1
