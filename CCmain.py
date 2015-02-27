@@ -21,8 +21,9 @@ class CCmain:
         soup = bs4.BeautifulSoup(html,from_encoding='gb2312')
         table = soup.find(attrs={"class" : "pic"})
         for finda in table.findAll('a'):
-            title = MySQLdb.escape_string(finda.get('title'))
+            title = finda.get('title')
             if not (title in newLst):
+                title = MySQLdb.escape_string(title)
                 print "link good!\n"
                 hrf = url+finda.get('href')
                 arti = common.getHtml(hrf)
@@ -90,8 +91,8 @@ class CCmain:
                 if i>10:break
                 tmpa = finda.find('a')
                 txt = url[1]+tmpa.text[2:]
-                txt = MySQLdb.escape_string(txt)
                 if not (txt in newLst):
+                    txt = MySQLdb.escape_string(txt)
                     print "{0} {1} link good!\n".format(i,url[1])
                     hrf = tmpa.get('href')
                     try:
@@ -198,8 +199,9 @@ class CCmain:
             table = soup.find(attrs={"class" : "listpicmain_content"})
             for finda in table.findAll(attrs={"class" : "listpicsimple"}):
                 tmpa = finda.find(attrs={"class" : "listpicsimpletitle"}).find('a')
-                title = MySQLdb.escape_string(urll[1]+tmpa.text)
+                title = urll[1]+tmpa.text
                 if not (title in newLst):
+                    title = MySQLdb.escape_string(title)
                     print "link good!\n"
                     hrf = tmpa.get('href')
                     arti = common.getHtml(hrf)
