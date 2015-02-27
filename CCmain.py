@@ -227,3 +227,112 @@ class CCmain:
                     imgll2 = tmp2[st3:st4].split("|")
                     self.dtore(intdate,title,source,imgll1,imgll2)
         return 1
+
+    def main3(self):
+        sql = "INSERT INTO `jx_news` (`addtime` ,`adduser` ,`title`,`content`,`img_url`," \
+                      "`type` ,`source`,`status`)VALUES"
+        UrlList = [
+            ['http://www.gzrsks.gov.cn/NewsList.aspx?ID=1&categoryID=6',u'【新闻中心】',6],
+            ['http://www.gzrsks.gov.cn/NewsList.aspx?ID=1&categoryID=7',u'【公务员考试】',6],
+            ['http://www.gzrsks.gov.cn/NewsList.aspx?ID=1&categoryID=8',u'【事业人员考试】',6],
+            ['http://www.gzrsks.gov.cn/NewsList.aspx?ID=1&categoryID=9',u'【职称考试】',6],
+            ['http://www.gzrsks.gov.cn/NewsList.aspx?ID=1&categoryID=10',u'【社会化考试】',6]
+        ]
+        urll = 'http://www.gzrsks.gov.cn/'
+        sqlSel = "SELECT title,addtime FROM jx_news where type=6"
+        newLst = []
+        common = CCommon()
+        rows = common.querySql(sqlSel)
+        for row in rows:
+           newLst.append(row[0]+str(row[1]))
+        for url in UrlList:
+            html = common.getHtml(url[0])
+            soup = bs4.BeautifulSoup(html)
+            table = soup.find("table",attrs={"class" : "border_Info"})
+            i = 0;
+            for finda in table.findAll('tr'):
+                i = i+1
+                if i>5:break
+                tmpa = finda.find('a')
+                tmptd = finda.findAll('td')
+                tdme = tmptd[1]
+                intdate = int(time.mktime(time.strptime(tdme.text,u"%Y-%m-%d")))
+                txt = url[1]+tmpa.text
+                if not (txt+str(intdate) in newLst):
+                    txt = MySQLdb.escape_string(txt)
+                    print "{0} {1} link good!\n".format(i,url[1])
+                    hrf = tmpa.get('href')
+                    try:
+                        arti = common.getHtml(urll+hrf)
+                    except:
+                        continue
+                    souparti = bs4.BeautifulSoup(arti)
+                    try:
+                        cellpd = souparti.find("table",attrs={"cellpadding" : "7"})
+                        celltp = cellpd.findAll("tr")
+                    except:
+                        continue
+                    content = celltp[2].find("span").contents
+                    desc = str(content)[1:-1]
+                    status = 0
+                    sql += '''(%d,"robots","%s","%s","%s",%d,"%s",%d),''' %(
+                        intdate,txt,MySQLdb.escape_string(desc),'',url[2],u"本站",status)
+        if i==0:
+            return True
+        else:
+            return common.exeSql(sql[:-1])
+
+    def main4(self):
+        sql = "INSERT INTO `jx_news` (`addtime` ,`adduser` ,`title`,`content`,`img_url`," \
+                      "`type` ,`source`,`status`)VALUES"
+        UrlList = [
+            ['http://www.scgz.lss.gov.cn/article.asp?id=3',u'【政务动态】',7],
+            ['http://www.scgz.lss.gov.cn/article.asp?id=11',u'【公示公告】',7],
+            ['http://www.scgz.lss.gov.cn/article.asp?id=17',u'【办事指南】',7],
+            ['http://www.scgz.lss.gov.cn/article.asp?id=19',u'【便民服务】',7]
+        ]
+        urll = 'http://www.scgz.lss.gov.cn/'
+        sqlSel = "SELECT title FROM jx_news where type=7"
+        newLst = []
+        common = CCommon()
+        rows = common.querySql(sqlSel)
+        for row in rows:
+           newLst.append(row[0])
+        for url in UrlList:
+            html = common.getHtml(url[0])
+            soup = bs4.BeautifulSoup(html,from_encoding='GBK')
+            table = soup.find("ul",attrs={"class" : "listli"})
+            i = 0;
+            for finda in table.findAll('a'):
+                i = i+1
+                if i>10:break
+                txt = url[1]+finda.text
+                if not (txt in newLst):
+                    txt = MySQLdb.escape_string(txt)
+                    print "{0} {1} link good!\n".format(i,url[1])
+                    hrf = finda.get('href')
+                    try:
+                        arti = common.getHtml(urll+hrf)
+                    except:
+                        continue
+                    souparti = bs4.BeautifulSoup(arti,from_encoding='GBK')
+                    content = souparti.find(attrs={"class" : "readcom"})
+                    tm = content.find(attrs={"class" : "rprop"}).text
+                    ly = tm.find(u"来源：")
+                    ll = tm.find(u"浏览：")
+                    gx = tm.find(u"更新：")
+
+                    source = tm[ly+3:ll].strip()
+                    try:
+                        intdate = int(time.mktime(time.strptime(tm[gx+3:],u"%Y-%m-%d")))
+                    except:
+                        continue
+                    desc = souparti.find(attrs={"class" : "rcont"}).text
+                    imgname = ''
+                    status = 0
+                    sql += '''(%d,"robots","%s","%s","%s",%d,"%s",%d),''' %(
+                        intdate,txt,MySQLdb.escape_string(desc),imgname,url[2],source,status)
+        if i==0:
+            return True
+        else:
+            return common.exeSql(sql[:-1])
