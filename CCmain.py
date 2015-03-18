@@ -11,7 +11,7 @@ class CCmain:
                       "`type` ,`source`,`status`)VALUES"
         url = 'http://www.kbcmw.com'
 
-        sqlSel = "SELECT title FROM jx_news WHERE type=0"
+        sqlSel = "SELECT title FROM jx_news WHERE type=0 order by id desc limit 0,200"
         common = CCommon()
         html = common.getHtml(url)
         rows = common.querySql(sqlSel)
@@ -75,7 +75,7 @@ class CCmain:
             ['http://www.kbcmw.com/?list-1558.html',u'【纪实康巴】',4]
         ]
         urll = 'http://www.kbcmw.com'
-        sqlSel = "SELECT title FROM jx_news"
+        sqlSel = "SELECT title FROM jx_news where type in(0,1,3,4) order by id desc limit 0,500"
         newLst = []
         common = CCommon()
         rows = common.querySql(sqlSel)
@@ -239,7 +239,7 @@ class CCmain:
             ['http://www.gzrsks.gov.cn/NewsList.aspx?ID=1&categoryID=10',u'【社会化考试】',6]
         ]
         urll = 'http://www.gzrsks.gov.cn/'
-        sqlSel = "SELECT title,addtime FROM jx_news where type=6"
+        sqlSel = "SELECT title,addtime FROM jx_news where type=6 order by id desc limit 0,200"
         newLst = []
         common = CCommon()
         rows = common.querySql(sqlSel)
@@ -292,7 +292,7 @@ class CCmain:
             ['http://www.scgz.lss.gov.cn/article.asp?id=19',u'【便民服务】',7]
         ]
         urll = 'http://www.scgz.lss.gov.cn/'
-        sqlSel = "SELECT title FROM jx_news where type=7"
+        sqlSel = "SELECT title FROM jx_news where type=7 order by id desc limit 0,200"
         newLst = []
         common = CCommon()
         rows = common.querySql(sqlSel)
