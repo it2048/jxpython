@@ -32,7 +32,10 @@ class CCmain:
                 tm = content.find(attrs={"class" : "show_info"}).text
                 tn = tm.find("\r")
                 tm = tm[3:tn].strip()
-                intdate = int(time.mktime(time.strptime(tm[:11],u"%Y年%m月%d日")))
+                try:
+                    intdate = int(time.mktime(time.strptime(tm[:11],u"%Y年%m月%d日")))
+                except:
+                    continue
                 source = tm[tm.find("：")+1:]
                 desc = content.find(attrs={"style" : "text-align:justify"})
                 if hasattr(desc,"contents")==False:
