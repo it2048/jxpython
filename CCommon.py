@@ -24,6 +24,7 @@ class CCommon:
             return cur.lastrowid
         except MySQLdb.Error,e:
             print "%s :Mysql Error %d: %s \n" % (tim,e.args[0], e.args[1])
+            return True
 
     def querySql(self,sql):
         try:
@@ -38,6 +39,7 @@ class CCommon:
             return rows
         except MySQLdb.Error,e:
             print "%s :Mysql Error %d: %s \n" % (tim,e.args[0], e.args[1])
+            return True
 
     def downloadImageFile(self,imgUrl,path):
         local_filename = str(time.strftime('%H%M%S',time.localtime(time.time())))+imgUrl.split('/')[-1]
