@@ -18,6 +18,8 @@ class CCmain:
         newLst = []
         for row in rows:
             newLst.append(row[0])
+        if not newLst:
+            return "Error from history record!"
         soup = bs4.BeautifulSoup(html,from_encoding='gb2312')
         table = soup.find(attrs={"class" : "pic"})
         for finda in table.findAll('a'):
@@ -83,6 +85,8 @@ class CCmain:
         rows = common.querySql(sqlSel)
         for row in rows:
            newLst.append(row[0])
+        if not newLst:
+            return "Error from history record!"
         for url in UrlList:
             html = common.getHtml(url[0])
             soup = bs4.BeautifulSoup(html,from_encoding='gb2312')
@@ -112,6 +116,8 @@ class CCmain:
                         continue
                     source = tm[tm.find("：")+1:]
                     desc = content.find(attrs={"style" : "text-align:justify"})
+                    if not desc:
+                        continue
                     imgname = ''
                     if hasattr(desc,"contents")==False:
                         desc = content.find(attrs={"id" : "MyContent"})
@@ -195,6 +201,8 @@ class CCmain:
         newLst = []
         for row in rows:
             newLst.append(row[0])
+        if not newLst:
+            return "Error from history record!"
         for urll in UrlList:
             html = common.getHtml(urll[0])
             soup = bs4.BeautifulSoup(html,from_encoding='gb2312')
@@ -247,6 +255,8 @@ class CCmain:
         rows = common.querySql(sqlSel)
         for row in rows:
            newLst.append(row[0]+str(row[1]))
+        if not newLst:
+            return "Error from history record!"
         for url in UrlList:
             html = common.getHtml(url[0])
             soup = bs4.BeautifulSoup(html)
@@ -300,6 +310,8 @@ class CCmain:
         rows = common.querySql(sqlSel)
         for row in rows:
            newLst.append(row[0])
+        if not newLst:
+            return "Error from history record!"
         for url in UrlList:
             html = common.getHtml(url[0])
             soup = bs4.BeautifulSoup(html,from_encoding='GBK')
