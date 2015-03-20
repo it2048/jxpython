@@ -22,9 +22,11 @@ class CCmain:
             return "Error from history record!"
         soup = bs4.BeautifulSoup(html,from_encoding='gb2312')
         table = soup.find(attrs={"class" : "pic"})
+        bbList = []
         for finda in table.findAll('a'):
             title = finda.get('title')
-            if not (title in newLst):
+            if not (title in newLst) and not (title in bbList):
+                bbList.append(title)
                 title = MySQLdb.escape_string(title)
                 print "link good!\n"
                 hrf = url+finda.get('href')
@@ -91,13 +93,15 @@ class CCmain:
             html = common.getHtml(url[0])
             soup = bs4.BeautifulSoup(html,from_encoding='gb2312')
             table = soup.find(attrs={"class" : "list_left_content"})
-            i = 0;
+            i = 0
+            bbList = []
             for finda in table.findAll('ul'):
                 i = i+1
                 if i>10:break
                 tmpa = finda.find('a')
                 txt = url[1]+tmpa.text[2:]
-                if not (txt in newLst):
+                if not (txt in newLst) and not (txt in bbList):
+                    bbList.append(txt)
                     txt = MySQLdb.escape_string(txt)
                     print "{0} {1} link good!\n".format(i,url[1])
                     hrf = tmpa.get('href')
@@ -155,8 +159,8 @@ class CCmain:
               "`type` ,`source`,`status`)VALUES"
         url = 'http://www.kbcmw.com'
         common = CCommon()
-        i=0
-        idp = 0;
+        i = 0
+        idp = 0
         newLst = []
         for test in imgll1:
             if i==0:
@@ -207,10 +211,12 @@ class CCmain:
             html = common.getHtml(urll[0])
             soup = bs4.BeautifulSoup(html,from_encoding='gb2312')
             table = soup.find(attrs={"class" : "listpicmain_content"})
+            bbList = []
             for finda in table.findAll(attrs={"class" : "listpicsimple"}):
                 tmpa = finda.find(attrs={"class" : "listpicsimpletitle"}).find('a')
                 title = urll[1]+tmpa.text
-                if not (title in newLst):
+                if not (title in newLst) and not (title in bbList):
+                    bbList.append(title)
                     title = MySQLdb.escape_string(title)
                     print "link good!\n"
                     hrf = tmpa.get('href')
@@ -261,7 +267,7 @@ class CCmain:
             html = common.getHtml(url[0])
             soup = bs4.BeautifulSoup(html)
             table = soup.find("table",attrs={"class" : "border_Info"})
-            i = 0;
+            i = 0
             for finda in table.findAll('tr'):
                 i = i+1
                 if i>5:break
@@ -316,12 +322,14 @@ class CCmain:
             html = common.getHtml(url[0])
             soup = bs4.BeautifulSoup(html,from_encoding='GBK')
             table = soup.find("ul",attrs={"class" : "listli"})
-            i = 0;
+            i = 0
+            bbList = []
             for finda in table.findAll('a'):
                 i = i+1
                 if i>10:break
                 txt = url[1]+finda.text
-                if not (txt in newLst):
+                if not (txt in newLst) and not (txt in bbList):
+                    bbList.append(txt)
                     txt = MySQLdb.escape_string(txt)
                     print "{0} {1} link good!\n".format(i,url[1])
                     hrf = finda.get('href')
