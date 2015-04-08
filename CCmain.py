@@ -105,7 +105,7 @@ class CCmain:
                 if not (txt in newLst) and not (txt in bbList):
                     bbList.append(txt)
                     txt = MySQLdb.escape_string(txt)
-                    print "{0} {1} {2} link good!\n".format(i,url[1],txt)
+                    print "{0} {1} {2} \n".format(i,url[1],txt)
                     hrf = tmpa.get('href')
                     try:
                         arti = common.getHtml(hrf)
@@ -151,6 +151,7 @@ class CCmain:
                         status = 0
                     sql += '''(%d,"robots","%s","%s","%s",%d,"%s",%d),''' %(
                         intdate,txt,MySQLdb.escape_string(desc),imgname,url[2],source,status)
+                    print "link good!\n"
         if i==0:
             print "no news!\n"
             return True
