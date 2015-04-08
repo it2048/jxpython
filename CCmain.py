@@ -121,9 +121,9 @@ class CCmain:
                     except:
                         continue
                     source = tm[tm.find("：")+1:]
-                    desc = content.find(attrs={"style" : "text-align:justify"})
-                    if not desc:
-                        desc = content.find(attrs={"class" : "show_content"})
+                    desc = content.find(attrs={"class" : "show_content"})
+                    if desc:
+                        desc = content.find(attrs={"id" : "MyContent"})
                     imgname = ''
                     if hasattr(desc,"contents")==False:
                         desc = content.find(attrs={"id" : "MyContent"})
