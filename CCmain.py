@@ -28,7 +28,7 @@ class CCmain:
             if not (title in newLst) and not (title in bbList):
                 bbList.append(title)
                 title = MySQLdb.escape_string(title)
-                print "link good!\n"
+                print "{0}link good!\n".format(title)
                 hrf = url+finda.get('href')
                 arti = common.getHtml(hrf)
                 souparti = bs4.BeautifulSoup(arti,from_encoding='gb2312')
@@ -42,6 +42,8 @@ class CCmain:
                     continue
                 source = tm[tm.find("：")+1:]
                 desc = content.find(attrs={"style" : "text-align:justify"})
+                if not desc:
+                    desc = content.find(attrs={"class" : "show_content"})
                 if hasattr(desc,"contents")==False:
                     desc = content.find(attrs={"id" : "MyContent"})
                     tp = desc.find(attrs={"style" : "text-align:center"})
@@ -103,7 +105,7 @@ class CCmain:
                 if not (txt in newLst) and not (txt in bbList):
                     bbList.append(txt)
                     txt = MySQLdb.escape_string(txt)
-                    print "{0} {1} link good!\n".format(i,url[1])
+                    print "{0} {1} {2} link good!\n".format(i,url[1],txt)
                     hrf = tmpa.get('href')
                     try:
                         arti = common.getHtml(hrf)
@@ -121,7 +123,7 @@ class CCmain:
                     source = tm[tm.find("：")+1:]
                     desc = content.find(attrs={"style" : "text-align:justify"})
                     if not desc:
-                        continue
+                        desc = content.find(attrs={"class" : "show_content"})
                     imgname = ''
                     if hasattr(desc,"contents")==False:
                         desc = content.find(attrs={"id" : "MyContent"})
@@ -150,6 +152,7 @@ class CCmain:
                     sql += '''(%d,"robots","%s","%s","%s",%d,"%s",%d),''' %(
                         intdate,txt,MySQLdb.escape_string(desc),imgname,url[2],source,status)
         if i==0:
+            print "no news!\n"
             return True
         else:
             return common.exeSql(sql[:-1])
